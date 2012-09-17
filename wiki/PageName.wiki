@@ -13,7 +13,8 @@ This is management protocol used to configure services (like Ethernet, Video ove
 The dissector is working with Wirshark *version 1.4.3* (or newer version). The Lua version should be at least *Lua 5.1*.
 
 To see the version you have to go to menu Help/About:
-[http://code.google.com/p/omci-wireshark-dissector/source/browse/trunk/wirehark-about.png]
+
+[http://omci-wireshark-dissector.googlecode.com/svn/trunk/wirehark-about.png]
 
 
 
