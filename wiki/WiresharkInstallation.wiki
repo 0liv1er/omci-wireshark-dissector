@@ -28,4 +28,4 @@ To see the version you have to go to menu Help/About:
 
 You're now ready.
 
-You can test the dissector by using this [http://code.google.com/p/omci-wireshark-dissector/source/browse/#svn%2Ftrunk example] 
+You can test the dissector by using this [http://code.google.com/p/omci-wireshark-dissector/source/browse/omci-exampl.pcap example] 
