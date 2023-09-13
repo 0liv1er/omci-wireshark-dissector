@@ -16,11 +16,9 @@ To see the version you have to go to menu [Help/About](https://github.com/0liv1e
 
 ## Changed to be done in Wireshark configuration
 
-* Go to your Wireshark project directory, on Windoze C:\Program Files\Wireshark
-* Open file init.lua
-* Add the following line at the end of this init.lua file: dofile("C:\\Path\\to\\my\\favourite\\folder\\omci.lua")
 * Download source files from [GitHub](https://github.com/0liv1er/omci-wireshark-dissector)
-* Copy both BinDecHex.lua and omci.lua files into Wireshark project directory
+* Copy both BinDecHex.lua and omci.lua files into Wireshark plugins directory
+  * On *nix systems it should be under $XDG_CONFIG_DIR/wireshark/ (i.e. $HOME/.config/wireshark/plugins)
 
 You're now ready.
 

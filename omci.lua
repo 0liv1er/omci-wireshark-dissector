@@ -110,11 +110,11 @@ local test_message_name = {}
 local test_message_name_meta = {
 	__index = function(t, k)
 		if k >= 0 and k <= 6 then
-			return "Reserved for future use"
+			return "Reserved for future use (" .. k .. ")"
 		elseif k == 7 then
 			return "Self test"
-		elseif k > 7 and k <=255 then 
-			return "Vendor specific" 
+		elseif k > 7 and k <=255 then
+			return "Vendor specific (" .. k .. ")"
 		else
 			return "***ERROR: Not a Test ID*** (" .. k .. ")"
 		end
@@ -123,16 +123,16 @@ local test_message_name_meta = {
 setmetatable(test_message_name, test_message_name_meta)
 
 local mt2 = {
-  __index = function(t2, k)   
+  __index = function(t2, k)
 	local returntable = {}
 	if k >= 172 and k <= 239 then
-		returntable.me_class_name= "Reserved for future B-PON managed entities"
+		returntable.me_class_name= "Reserved for future B-PON managed entities (" .. k .. ")"
 	elseif k >= 240 and k <= 255 then
-		returntable.me_class_name= "Reserved for vendor-specific managed entities"
-   	elseif k >= 343 and k <= 65279 then 
-		returntable.me_class_name= "Reserved for future standardization" 
-	elseif k >= 65280 and k <= 65535 then 
-		returntable.me_class_name= "Reserved for vendor-specific use"
+		returntable.me_class_name= "Reserved for vendor-specific managed entities (" .. k .. ")"
+	elseif k >= 343 and k <= 65279 then
+		returntable.me_class_name= "Reserved for future standardization (" .. k .. ")"
+	elseif k >= 65280 and k <= 65535 then
+		returntable.me_class_name= "Reserved for vendor-specific use (" .. k .. ")"
 	else
 		returntable.me_class_name= "***TBD*** (" .. k .. ")"
     end
@@ -192,6 +192,17 @@ local omci_def = {
 	{attname="PPPoE Filter",			length=1, setbycreate=false},
 	{attname="Power Control",			length=1, setbycreate=false}},
 
+[14] = { me_class_name ="Interworking VCC termination point",
+	{attname="VCI value",			length=2, setbycreate=true},
+	{attname="VP network CTP connectivity pointer",			length=2, setbycreate=true},
+	{attname="Deprecated 1",			length=1, setbycreate=true},
+	{attname="Deprecated 2",			length=2, setbycreate=true},
+	{attname="AAL5 profile pointer",			length=2, setbycreate=true},
+	{attname="Deprecated 3",			length=2, setbycreate=true},
+	{attname="AAL loopback configuration",			length=1, setbycreate=false},
+	{attname="PPTP counter",			length=1, setbycreate=false},
+	{attname="Operational state",			length=1, setbycreate=false}},
+
 [24] = { me_class_name = "Ethernet PM History Data",
 	{ attname="Interval End Time", length=1, setbycreate=false },
 	{ attname="Threshold Data 1/2 Id", length=2, setbycreate=true },
@@ -225,6 +236,16 @@ local omci_def = {
 	{ attname="Unknown MAC address discard", length=1, setbycreate=true },
 	{ attname="MAC learning depth", length=1, setbycreate=true }},
 
+[46] = { me_class_name = "MAC bridge configuration data",
+	{ attname="Bridge MAC address", length=6, setbycreate=false },
+	{ attname="Bridge priority", length=2, setbycreate=false },
+	{ attname="Designated root", length=8, setbycreate=false },
+	{ attname="Root path cost", length=4, setbycreate=false },
+	{ attname="Bridge port count", length=1, setbycreate=false },
+	{ attname="Root port num", length=1, setbycreate=false },
+	{ attname="Hello time", length=2, setbycreate=false },
+	{ attname="Forward delay", length=2, setbycreate=false }},
+
 [47] = { me_class_name = "MAC bridge port configuration data",
 	{ attname="Bridge id pointer", length=2, setbycreate=true },
 	{ attname="Port num", length=1, setbycreate=true },
@@ -246,6 +267,9 @@ local omci_def = {
 [49] = { me_class_name = "MAC bridge port filter table data",
 	{ attname="MAC filter table", length=8, setbycreate=false }},
 
+[50] = { me_class_name = "MAC bridge port bridge table data",
+	{ attname="Bridge table", length=8, setbycreate=false}},
+
 [51] = { me_class_name = "MAC Bridge PM History Data",
 	{ attname="Interval end time", length=1, setbycreate=false },
 	{ attname="Threshold data 1/2 id", length=2, setbycreate=true },
@@ -257,8 +281,26 @@ local omci_def = {
 	{ attname="Forwarded frame counter", length=4, setbycreate=false },	
 	{ attname="Delay exceeded discard counter", length=4, setbycreate=false },	
 	{ attname="MTU exceeded discard counter", length=4, setbycreate=false },	
-	{ attname="Received frame counter", length=4, setbycreate=false },	
+	{ attname="Received frame counter", length=4, setbycreate=false },
 	{ attname="Received and discarded counter", length=4, setbycreate=false }},
+
+[55] = { me_class_name = "**TBD** Voice PM history data" },
+
+[66] = { me_class_name = "**TBD** AAL2 SSCS protocol monitoring history data" },
+
+[67] = { me_class_name = "IP port configuration data",
+	{ attname="This attribute numbers the port", length=1, setbycreate=true },
+	{ attname="TP type", length=1, setbycreate=true },
+	{ attname="TP pointer", length=2, setbycreate=true },	
+	{ attname="Port address", length=4, setbycreate=true },	
+	{ attname="Port mask", length=4, setbycreate=true },	
+	{ attname="Unnumbered", length=1, setbycreate=true },
+	{ attname="Administrative state", length=1, setbycreate=true },
+	{ attname="Port state", length=1, setbycreate=false },	
+	{ attname="Allow remote access", length=1, setbycreate=true },	
+	{ attname="Router id pointer", length=2, setbycreate=true },	
+	{ attname="ARP pointer", length=2, setbycreate=true },
+	{ attname="Encapsulation method", length=1, setbycreate=true }},
 
 [79] = { me_class_name = "MAC bridge port filter preassign table",
 	{ attname="IPv4 multicast filtering", length=1, setbycreate=false },
@@ -306,7 +348,7 @@ local omci_def = {
 	{attname="Video Lower Optical Threshold", length=1, setbycreate=false},
 	{attname="Video Upper Optical Threshold", length=1, setbycreate=false}},
  
- [130] = { me_class_name = "802.1P Mapper Service Profile",
+[130] = { me_class_name = "802.1P Mapper Service Profile",
 	{attname="TP Pointer",					length=2,  setbycreate=true},
 	{attname="Interwork TP pointer for P-bit priority 0",	length=2,  setbycreate=true},
 	{attname="Interwork TP pointer for P-bit priority 1",	length=2,  setbycreate=true},
@@ -322,10 +364,13 @@ local omci_def = {
 	{attname="TP Type:",					length=1,  setbycreate=true}},
 
 [131] = { me_class_name = "OLT-G",
-	{attname="OLT vendor id",					length=4,  setbycreate=false},
-	{attname="Equipment id",	length=20,  setbycreate=false},
-	{attname="OLT version",	length=14,  setbycreate=false}},
-				
+	{attname="OLT vendor ID",					length=4,  setbycreate=false},
+	{attname="Equipment ID",	length=20,  setbycreate=false},
+	{attname="Version",	length=14,  setbycreate=false},
+	{attname="Time of day information",	length=14,  setbycreate=false}},
+
+[132] = { me_class_name = "**TBD** Multicast interworking VCC termination point" },
+
 [133] = { me_class_name = "ONT Power Shedding",
 	{ attname="Restore power timer reset interval", length=2, setbycreate=false },
 	{ attname="Data class shedding interval", length=2, setbycreate=false },
@@ -338,6 +383,10 @@ local omci_def = {
 	{ attname="Frame class shedding interval", length=2, setbycreate=false },
 	{ attname="SONET class shedding interval", length=2, setbycreate=false },
 	{ attname="Shedding status", length=2, setbycreate=false }},
+
+[137] = { me_class_name = "Network address",
+	{attname="Security pointer", length=2,  setbycreate=true},
+	{attname="Address pointer",	length=2,  setbycreate=true}},
 
 [158] = { me_class_name = "ONT remote debug",
 	{ attname="Command format", length=1, setbycreate=false },
@@ -641,6 +690,86 @@ local omci_def = {
 	{ attname="Packets 256 to 511 Octets", length=4, setbycreate=false },
 	{ attname="Packets 512 to 1023 Octets", length=4, setbycreate=false },
 	{ attname="Packets 1024 to 1518 Octets", length=4, setbycreate=false }},
+
+[329] = { me_class_name = "Virtual Ethernet interface point",
+	{ attname="Administrative state", length=1, setbycreate=false },
+	{ attname="Operational state", length=1, setbycreate=false },
+	{ attname="Interdomain name", length=25, setbycreate=false },
+	{ attname="TCP/UDP pointer", length=2, setbycreate=false },
+	{ attname="IANA assigned port", length=2, setbycreate=false }},
+
+[332] = { me_class_name = "Enhanced security control",
+    { attname="OLT crypto capabilities", length=16, setbycreate=false },
+    { attname="OLT random challenge table", length=17, setbycreate=false },
+    { attname="OLT challenge status", length=1, setbycreate=false },
+    { attname="ONU selected crypto capabilities", length=1, setbycreate=false },
+    { attname="ONU random challenge table", length=16, setbycreate=false },
+    { attname="ONU authentication result table", length=16, setbycreate=false },
+    { attname="ONU random challenge table", length=17, setbycreate=false },
+    { attname="OLT result status", length=1, setbycreate=false },
+    { attname="ONU authentication status", length=1, setbycreate=false },
+    { attname="Master session key name", length=16, setbycreate=false },
+    { attname="Broadcast key table", length=18, setbycreate=false },
+    { attname="Effective key length", length=2, setbycreate=false }},
+
+[334] = { me_class_name = "Ethernet frame extended PM",
+	{ attname="Interval end time", length=1, setbycreate=false },
+	{ attname="Control Block: Threshold data 1/2 ID", length=2, setbycreate=true },
+	{ attname="Control Block: Parent ME class", length=2, setbycreate=true },
+	{ attname="Control Block: Parent ME instance", length=2, setbycreate=true },
+	{ attname="Control Block: Accumulation disable", length=2, setbycreate=true },
+	{ attname="Control Block: TCA disable", length=2, setbycreate=true },
+	{ attname="Control Block: Control fields", length=2, setbycreate=true },
+	{ attname="Control Block: TCI", length=2, setbycreate=true },
+	{ attname="Control Block: Reserved", length=2, setbycreate=true },
+	{ attname="Drop events", length=4, setbycreate=false },
+	{ attname="Octets", length=4, setbycreate=false },
+	{ attname="Frames", length=4, setbycreate=false },
+	{ attname="Broadcast frames", length=4, setbycreate=false },
+	{ attname="Multicast frames", length=4, setbycreate=false },
+	{ attname="CRC errored frames", length=4, setbycreate=false },
+	{ attname="Undersize frames", length=4, setbycreate=false },
+	{ attname="Oversize frames", length=4, setbycreate=false },
+	{ attname="Frames 64 octets", length=4, setbycreate=false },
+	{ attname="Frames 65 to 127 octets", length=4, setbycreate=false },
+	{ attname="Frames 128 to 255 octets", length=4, setbycreate=false },
+	{ attname="Frames 256 to 511 octets", length=4, setbycreate=false }
+	{ attname="Frames 512 to 1 023 octets", length=4, setbycreate=false },
+	{ attname="Frames 1024 to 1518 octets", length=4, setbycreate=false }},
+
+[340] = { me_class_name = "BBF TR-069 management server",
+    { attname="Administrative state", length=1, setbycreate=false },
+    { attname="ACS network address", length=2, setbycreate=false },
+    { attname="Associated tag", length=2, setbycreate=false }},
+
+[341] = { me_class_name = "GEM port network CTP performance monitoring history data",
+	{ attname="Interval end time", length=1, setbycreate=false },
+	{ attname="Threshold data 1/2 ID", length=2, setbycreate=true },
+	{ attname="Rx frames", length=4, setbycreate=false },
+	{ attname="Tx frames", length=4, setbycreate=false },
+	{ attname="Rx bytes", length=4, setbycreate=false },
+	{ attname="Tx bytes", length=4, setbycreate=false },
+	{ attname="Tx discarded frames", length=4, setbycreate=false },
+	{ attname="Tx discarded bytes", length=4, setbycreate=false }},
+
+[345] = { me_class_name = "XG-PON downstream management performance monitoring history data",
+	{ attname="Interval end time", length=1, setbycreate=false },
+	{ attname="Threshold data 1/2 ID", length=2, setbycreate=true },
+	{ attname="PLOAM message integrity check (MIC) error count", length=4, setbycreate=false },
+	{ attname="Downstream PLOAM messages count", length=4, setbycreate=false },
+	{ attname="Profile messages received", length=4, setbycreate=false },
+	{ attname="Ranging_time messages received", length=4, setbycreate=false },
+	{ attname="Deactivate_ONU-ID messages received", length=4, setbycreate=false }
+	{ attname="Disable_serial_number messages received", length=4, setbycreate=false },
+	{ attname="Request_registration messages received", length=4, setbycreate=false },
+	{ attname="Assign_alloc-ID messages received", length=4, setbycreate=false },
+	{ attname="Key_control messages received", length=4, setbycreate=false },
+	{ attname="Sleep_allow messages received", length=4, setbycreate=false },
+	{ attname="Baseline OMCI messages received count", length=4, setbycreate=false },
+	{ attname="Extended OMCI messages received count", length=4, setbycreate=false },
+	{ attname="Assign_ONU-ID messages received", length=4, setbycreate=false },
+	{ attname="OMCI MIC error count", length=4, setbycreate=false }},
+
 }
 
 setmetatable(omci_def, mt2)
@@ -707,10 +836,10 @@ function omciproto.dissector (buffer, pinfo, tree)
 	devid_subtree:add(f.me_class_str, me_class_name .. " (" .. me_class .. ")")
 	devid_subtree:add(f.me_id, me_instance)
 	offset = offset +  4
-	
-	-- OMCI Attributes and/or message result	
-	local content = buffer(offset, 32)
-	if( (msg_type_mt == "Get" or msg_type_mt == "Get Current Data") and msg_type_ar == 1 and msg_type_ak == 0) then
+
+	-- OMCI Attributes and/or message result
+	local content = buffer(offset, math.min(32, buffer:len() - offset))
+	if( (msg_type_mt == "Get" or msg_type_mt == "Get Current Data" or msg_type_mt == "Get Next") and msg_type_ar == 1 and msg_type_ak == 0) then
 		local attribute_mask = content(0, 2)
 		local attributemask_subtree = subtree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )
 		attributemask_subtree:add(attribute_mask, tostring(BinDecHex.Hex2Bin(tostring(attribute_mask))))
@@ -724,7 +853,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 		end
 	end
 
-	if( (msg_type_mt == "Get" or msg_type_mt == "Get Current Data") and msg_type_ar == 0 and msg_type_ak == 1) then
+	if( (msg_type_mt == "Get" or msg_type_mt == "Get Current Data" or msg_type_mt == "Get Next") and msg_type_ar == 0 and msg_type_ak == 1) then
 		subtree:add(content(0,1), "Result: " .. msg_result[content(0,1):uint()] .. " (" .. content(0,1) .. ")")
 		local attribute_mask = content(1, 2)
 		local attributemask_subtree = subtree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )

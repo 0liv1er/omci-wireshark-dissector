@@ -50,7 +50,7 @@
 
 --]]
 
-module(..., package.seeall);
+module("BinDecHex", package.seeall);
 
 local hex2bin = {
 	["0"] = "0000",
