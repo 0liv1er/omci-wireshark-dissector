@@ -733,7 +733,7 @@ local omci_def = {
 	{ attname="Frames 64 octets", length=4, setbycreate=false },
 	{ attname="Frames 65 to 127 octets", length=4, setbycreate=false },
 	{ attname="Frames 128 to 255 octets", length=4, setbycreate=false },
-	{ attname="Frames 256 to 511 octets", length=4, setbycreate=false }
+	{ attname="Frames 256 to 511 octets", length=4, setbycreate=false },
 	{ attname="Frames 512 to 1 023 octets", length=4, setbycreate=false },
 	{ attname="Frames 1024 to 1518 octets", length=4, setbycreate=false }},
 
@@ -759,7 +759,7 @@ local omci_def = {
 	{ attname="Downstream PLOAM messages count", length=4, setbycreate=false },
 	{ attname="Profile messages received", length=4, setbycreate=false },
 	{ attname="Ranging_time messages received", length=4, setbycreate=false },
-	{ attname="Deactivate_ONU-ID messages received", length=4, setbycreate=false }
+	{ attname="Deactivate_ONU-ID messages received", length=4, setbycreate=false },
 	{ attname="Disable_serial_number messages received", length=4, setbycreate=false },
 	{ attname="Request_registration messages received", length=4, setbycreate=false },
 	{ attname="Assign_alloc-ID messages received", length=4, setbycreate=false },
