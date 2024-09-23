@@ -32,15 +32,21 @@
    Nice Wireshark dissector example: http://thomasfischer.biz/?p=175
    Another nice Wireshark dissector example: http://code.google.com/p/eathena/source/browse/devel/FlavioJS/athena.lua?r=9341
 
-   The dissector binary to hexadecimal conversion, module available at http://www.dialectronics.com/Lua/code/BinDecHex.shtml
-
    Note from the author:
    *) Not all ME classes described in the OMCI standards are supported in this dissector (any support to complete the list is very welcome)
    *) This implementation is the first LUA SW written by the author. It (certainly) could be more efficient (any comment is welcome)
 
 --]]
 
-require "BinDecHex"
+function toBinStr(hexStr)
+	local num = tonumber(hexStr, 16)
+	local binaryStr = ""
+	repeat
+		binaryStr = tostring(num % 2) .. binaryStr
+		num = math.floor(num / 2)
+	until num == 0
+	return binaryStr
+end
 
 -- Create a new dissector
 omciproto = Proto ("omci", "OMCI Protocol")
@@ -841,7 +847,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 	if( (msg_type_mt == "Get" or msg_type_mt == "Get Current Data" or msg_type_mt == "Get Next") and msg_type_ar == 1 and msg_type_ak == 0) then
 		local attribute_mask = content(0, 2)
 		local attributemask_subtree = subtree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )
-		attributemask_subtree:add(attribute_mask, tostring(BinDecHex.Hex2Bin(tostring(attribute_mask))))
+		attributemask_subtree:add(attribute_mask, toBinStr(tostring(attribute_mask)))
 		local content_subtree = subtree:add(content, "Attribute List")
 		attributes = omci_def[me_class:uint()]
 		for i = 1,#attributes do
@@ -856,7 +862,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 		subtree:add(content(0,1), "Result: " .. msg_result[content(0,1):uint()] .. " (" .. content(0,1) .. ")")
 		local attribute_mask = content(1, 2)
 		local attributemask_subtree = subtree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )
-		attributemask_subtree:add(attribute_mask, tostring(BinDecHex.Hex2Bin(tostring(attribute_mask))))
+		attributemask_subtree:add(attribute_mask, toBinStr(tostring(attribute_mask)))
 		local content_subtree = subtree:add(content, "Attribute List")
 		local attributes = {}
 		local attribute_offset = 0
@@ -875,7 +881,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 	if( msg_type_mt == "Set" and msg_type_ar == 1 and msg_type_ak == 0) then
 		local attribute_mask = content(0, 2)
 		local attributemask_subtree = subtree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )
-		attributemask_subtree:add(attribute_mask, tostring(BinDecHex.Hex2Bin(tostring(attribute_mask))))
+		attributemask_subtree:add(attribute_mask, toBinStr(tostring(attribute_mask)))
 		local content_subtree = subtree:add(content, "Attribute List")
 		local attributes = {}
 		local attribute_offset = 0
@@ -929,7 +935,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 		upload_substree:add(content(2,2), "Managed Entity Instance: " .. content(2,2):uint() .. " (0x" .. content(2,2) .. ")")
 		local attribute_mask = content(4, 2)
 		local attributemask_subtree = upload_substree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )
-		attributemask_subtree:add(attribute_mask, tostring(BinDecHex.Hex2Bin(tostring(attribute_mask))))
+		attributemask_subtree:add(attribute_mask, toBinStr(tostring(attribute_mask)))
 		local content_subtree = upload_substree:add(content, "Attribute List")
 		local attributes = {}
 		local attribute_offset
