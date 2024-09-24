@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Wireshark dissector for ONT Management and Control Interface (OMCI) protocol (ITU Rec. G984.4)
+Wireshark dissector for ONT Management and Control Interface (OMCI) protocol (ITU Rec. G984.4, G988)
 
 This protocol is used on Gigabit Passive Optical Network (GPON) between Optical Line Termition (OLT) and Optical Network Termination (ONT) units.
 
@@ -10,7 +10,7 @@ This is management protocol used to configure services (like Ethernet, Video ove
 
 ## Pre-requirements
 
-The dissector is working with **Wirshark version 1.4.3** (or newer version). The Lua version should be at least **Lua 5.1**.
+The dissector is working with **Wireshark version 1.4.3** (or newer version). The Lua version should be at least **Lua 5.1**.
 
 To see the version you have to go to menu [Help/About](https://github.com/0liv1er/omci-wireshark-dissector/raw/master/wirehark-about.png)
 
@@ -18,7 +18,7 @@ To see the version you have to go to menu [Help/About](https://github.com/0liv1e
 
 * Download source files from [GitHub](https://github.com/0liv1er/omci-wireshark-dissector)
 * Copy omci.lua files into Wireshark plugins directory
-  * On *nix systems it should be under $XDG_CONFIG_DIR/wireshark/ (i.e. $HOME/.config/wireshark/plugins)
+  * On Ubuntu, Debian, Fedora and Redhat systems, the folder where to copy the lua file should be $HOME/.config/wireshark/plugins
 
 You're now ready.
 
