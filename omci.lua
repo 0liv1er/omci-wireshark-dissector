@@ -77,7 +77,7 @@ local msgtype = {
 	[14] = "MIB Upload Next",
 	[15] = "MIB Reset",
 	[16] = "Alarm",
-	[17] = "Attribute Value Change",
+	[17] = "AVC Notification",
 	[18] = "Test",
 	[19] = "Start Software Download",
 	[20] = "Download Section",
@@ -967,7 +967,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 		end
 	end
 
-	if( msg_type_mt == "Set" and msg_type_ar == 1 and msg_type_ak == 0) then
+	if ((msg_type_mt == "Set" and msg_type_ar == 1 and msg_type_ak == 0) or (msg_type_mt == "AVC Notification")) then
 		local attribute_mask = content(0, 2)
 		local attributemask_subtree = subtree:add(attribute_mask, "Attribute Mask (0x" .. attribute_mask .. ")" )
 		attributemask_subtree:add(attribute_mask, toBinStr(tostring(attribute_mask)))
