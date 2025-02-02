@@ -56,11 +56,11 @@ function omciproto.init()
 end
 
 local msgtype_meta = {
-  __index = function(t, k)
-    if k < 4 or k > 28 then
-      return "Reserved"
-    end
-  end
+	__index = function(t, k)
+		if k < 4 or k > 28 then
+			return "Reserved"
+		end
+	end
 }
 
 local msgtype = {
@@ -93,11 +93,11 @@ local msgtype = {
 setmetatable(msgtype, msgtype_meta)
 
 local msg_result_meta = {
-  __index = function(t, k)
-    if k == 7 or k == 8 or k > 9 then
-      return "Unknown"
-    end
-  end
+	__index = function(t, k)
+		if k == 7 or k == 8 or k > 9 then
+			return "Unknown"
+		end
+	end
 }
 
 local msg_result= {
@@ -129,21 +129,21 @@ local test_message_name_meta = {
 setmetatable(test_message_name, test_message_name_meta)
 
 local mt2 = {
-  __index = function(t2, k)
-	local returntable = {}
-	if k >= 172 and k <= 239 then
-		returntable.me_class_name= "Reserved for future B-PON managed entities (" .. k .. ")"
-	elseif k >= 240 and k <= 255 then
-		returntable.me_class_name= "Reserved for vendor-specific managed entities (" .. k .. ")"
-	elseif k >= 343 and k <= 65279 then
-		returntable.me_class_name= "Reserved for future standardization (" .. k .. ")"
-	elseif k >= 65280 and k <= 65535 then
-		returntable.me_class_name= "Reserved for vendor-specific use (" .. k .. ")"
-	else
-		returntable.me_class_name= "***TBD*** (" .. k .. ")"
-    end
-	return returntable
-  end
+	__index = function(t2, k)
+		local returntable = {}
+		if k >= 172 and k <= 239 then
+			returntable.me_class_name= "Reserved for future B-PON managed entities (" .. k .. ")"
+		elseif k >= 240 and k <= 255 then
+			returntable.me_class_name= "Reserved for vendor-specific managed entities (" .. k .. ")"
+		elseif k >= 343 and k <= 65279 then
+			returntable.me_class_name= "Reserved for future standardization (" .. k .. ")"
+		elseif k >= 65280 and k <= 65535 then
+			returntable.me_class_name= "Reserved for vendor-specific use (" .. k .. ")"
+		else
+			returntable.me_class_name= "***TBD*** (" .. k .. ")"
+		end
+		return returntable
+	end
 }
 
 local omci_def = {
@@ -901,7 +901,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 	-- OMCI Transaction Correlation Identifier
 	local tci = buffer(offset, 2)
 	subtree:add(f.tci, tci)
-	offset = offset +  2
+	offset = offset + 2
 
 	-- OMCI Message Type
 	local msg_type = buffer(offset, 1)
@@ -913,12 +913,12 @@ function omciproto.dissector (buffer, pinfo, tree)
 	msgtype_subtree:add(f.msg_type_ar, msg_type)
 	msgtype_subtree:add(f.msg_type_ak, msg_type)
 	msgtype_subtree:add(f.msg_type_mt, msg_type)
-	offset = offset +  1
+	offset = offset + 1
 
 	-- OMCI Device ID
 	local dev_id = buffer(offset, 1)
 	subtree:add(f.dev_id, dev_id)
-	offset = offset +  1
+	offset = offset + 1
 
 	-- OMCI Message Entity Class & Instance
 	local me_class = buffer(offset, 2)
@@ -929,7 +929,7 @@ function omciproto.dissector (buffer, pinfo, tree)
 --	devid_subtree:add(f.me_class, me_class)
 	devid_subtree:add(f.me_class_str, me_class_name .. " (" .. me_class .. ")")
 	devid_subtree:add(f.me_id, me_instance)
-	offset = offset +  4
+	offset = offset + 4
 
 	-- OMCI Attributes and/or message result
 	local content = buffer(offset, math.min(32, buffer:len() - offset))
@@ -1130,10 +1130,10 @@ function omciproto.dissector (buffer, pinfo, tree)
 		msg_type_mt = "OLT> " .. msg_type_mt
 	end
 
-	while msg_type_mt:len() < 25 do  -- Padding to align ME classes
+	while msg_type_mt:len() < 25 do -- Padding to align ME classes
 		msg_type_mt = msg_type_mt .. " "
 	end
-    pinfo.cols.info:set(msg_type_mt .. " - " .. me_class_name)
+	pinfo.cols.info:set(msg_type_mt .. " - " .. me_class_name)
 	subtree:append_text (", " .. msg_type_mt .. " - " .. me_class_name )	-- at the top of the OMCI tree
 end
 
